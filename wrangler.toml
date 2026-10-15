@@ -1,0 +1,29 @@
+name = "zumrad-ai"
+main = "worker/index.js"
+compatibility_date = "2025-10-01"
+
+# Workers AI — chat, rasm va video ssenariysi uchun (nomi aynan "AI" bo‘lishi shart).
+[ai]
+binding = "AI"
+
+# web/ papkasi — sayt (frontend). /api/* so‘rovlari avval Worker’ga boradi.
+[assets]
+directory = "./web"
+binding = "ASSETS"
+run_worker_first = ["/api/*"]
+
+[observability]
+enabled = true
+
+# ---------------------------------------------------------------------------
+# IXTIYORIY sozlamalar. Maxfiy kalitlarni [vars] ga YOZMANG — Cloudflare
+# Dashboard → Workers → zumrad-ai → Settings → Variables and Secrets orqali qo‘shing.
+#
+#   ACCESS_CODE            — saytga kirish kodi (kvotangizni begonalardan himoya qiladi)
+#   TAVILY_API_KEY         — sifatli internet qidiruvi (tavily.com, bepul reja bor)
+#   BRAVE_API_KEY          — muqobil qidiruv (Brave Search API)
+#   REPLICATE_API_TOKEN    — generativ video uchun (ixtiyoriy, pullik)
+#   REPLICATE_VIDEO_MODEL  — masalan "owner/model-nomi"
+#   REPLICATE_VIDEO_INPUT  — qo‘shimcha parametrlar JSON ko‘rinishida (ixtiyoriy)
+#   MODEL_FAST / MODEL_SMART / MODEL_CODE — modellarni almashtirish (Workers AI model ID)
+# ---------------------------------------------------------------------------

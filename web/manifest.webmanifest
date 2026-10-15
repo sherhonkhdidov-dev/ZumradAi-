@@ -1,0 +1,17 @@
+{
+  "name": "Zumrad AI",
+  "short_name": "Zumrad AI",
+  "description": "O‘zbek tilidagi sun’iy intellekt: suhbat, kod, rasm va video.",
+  "lang": "uz",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#F3F6F2",
+  "theme_color": "#0A3B2C",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/logo.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
