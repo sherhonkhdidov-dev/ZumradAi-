@@ -1,4 +1,4 @@
-name = "zumrad-ai"
+name = "zumradai"
 main = "worker/index.js"
 compatibility_date = "2025-10-01"
 
