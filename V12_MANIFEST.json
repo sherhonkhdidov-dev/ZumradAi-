@@ -1,0 +1,33 @@
+{
+  "version": "12.0",
+  "base": "ZumradAI Professional Full v11",
+  "preserved_original_ui": [
+    "web/index.html",
+    "web/css/app.css",
+    "web/js/chat.js",
+    "web/js/main.js"
+  ],
+  "added": [
+    "web/studio.html",
+    "web/studio/studio.js",
+    "tests/studio.test.mjs",
+    "PROFESSIONAL_FULL_V12.md",
+    "CONTEST_DEMO_PLAN.md",
+    "experiments/own-model/data/professional_code_design_v12.jsonl",
+    "experiments/own-model/benchmarks/code_design_benchmark_v12.jsonl",
+    "CODE_DESIGN_STARTER_LIBRARY.md"
+  ],
+  "note": "No third-party AI model added. Studio is template-assisted, not a trained neural generator.",
+  "dataset_examples_added": 68,
+  "benchmark_examples": 14,
+  "training_run": {
+    "steps": 500,
+    "parameters": 173824,
+    "train_chars": 75506,
+    "train_tokens": 34303,
+    "validation_examples": 12,
+    "first_validation_loss": 6.2366,
+    "last_validation_loss": 5.4006,
+    "quality_note": "Generation remains incoherent/blank on some validation prompts; not production-ready."
+  }
+}

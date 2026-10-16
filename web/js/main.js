@@ -5,6 +5,7 @@ import * as store from "./store.js";
 import { getHealth } from "./api.js";
 import { bindPanel, closePreview, isOpen } from "./preview.js";
 import { initSettings, openSettings, applyTheme } from "./settings.js";
+import { initVoice } from "./voice.js";
 import {
   newChat, renderAll, bindEvents, initScroll, addFiles, submit, autosize, closeSide, sendFix, hooks, renderPending,
 } from "./chat.js";
@@ -66,6 +67,7 @@ function updateWebButton() {
 /* ---------- ishga tushirish ---------- */
 
 async function boot() {
+  initVoice();
   initSettings({
     onChange: (opts = {}) => {
       updateWebButton();

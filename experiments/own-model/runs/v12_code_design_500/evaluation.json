@@ -1,0 +1,69 @@
+{
+  "checkpoint": "runs/v12_code_design_500/best_model.pt",
+  "examples": 12,
+  "mean_chunk_loss": 5.453401629130045,
+  "perplexity_estimate": 233.55127102504792,
+  "warning": "Character-level model; these metrics are diagnostic only and do not establish answer correctness. Review generated outputs manually.",
+  "results": [
+    {
+      "prompt": "Kod yozadigan AI’dan qanday so‘rash kerak?",
+      "expected": "Vazifa, ishlatiladigan til va framework, mavjud fayllar, cheklovlar, kutilgan natija va test mezonlarini aniq yozing. Katta loyihada avval reja va fayl tuzilmasini so‘rang, keyin o‘zgarishlarni test bilan tekshiring.",
+      "generated": ""
+    },
+    {
+      "prompt": "Mavjud dizaynni buzmasdan yangi funksiya qo‘shish.",
+      "expected": "Avval mavjud komponentlar, CSS tokenlari va route’larni o‘rganing. Kichik, izolyatsiyalangan o‘zgarish qiling; umumiy stillarni qayta yozmang; mobil/desktop ekranlarni va asosiy oqimlarni regression test qiling.",
+      "generated": ""
+    },
+    {
+      "prompt": "Bepul hisoblash resursidan foydalanishda nimalarga e’tibor berish kerak?",
+      "expected": "GPU vaqti, sessiya muddati, RAM, disk va foydalanish limiti o‘zgarishi mumkin. Checkpointni muntazam saqlang, kichik batch bilan sinang, maxfiy kalitlarni notebook ichida ulashmang va limitlarni tekshiring.",
+      "generated": ""
+    },
+    {
+      "prompt": "Model natijasini yaxshilashning birinchi qadami nima?",
+      "expected": "Avval aniq baholash to‘plami yarating va boshlang‘ich natijani o‘lchang. Keyin ma’lumot sifati, tokenizatsiya, kontekst uzunligi va trening sozlamalarini bittadan o‘zgartiring. O‘lchovsiz faqat ko‘proq qadam bajarish sifat oshganini bildirmaydi.",
+      "generated": ""
+    },
+    {
+      "prompt": "Zumrad AI foydalanuvchiga kod faylini qanday berishi kerak?",
+      "expected": "Kod bir nechta fayldan iborat bo‘lsa, papka tuzilmasini va fayllarni yaratib, ZIP arxivga joylash mumkin. ZIP ichida README, o‘rnatish va ishga tushirish ko‘rsatmalari bo‘lsin; test qilinmaganini aniq belgilang.",
+      "generated": ""
+    },
+    {
+      "prompt": "Modelni o‘qitishda litsenziya nima uchun muhim?",
+      "expected": "Faqat foydalanish va treningga ruxsat berilgan ma’lumotlardan foydalaning. Litsenziya, mualliflik shartlari va maxfiylik talablarini qayd eting. Shaxsiy yoki maxfiy ma’lumotlarni ruxsatsiz datasetga qo‘shmang.",
+      "generated": ""
+    },
+    {
+      "prompt": "Model qaysi tilda javob berishini qanday o‘rgatish mumkin?",
+      "expected": "Datasetda har bir tilning tabiiy, toza va xilma-xil misollarini bering; foydalanuvchi tilini aniqlash va shu tilda javob berish misollarini qo‘shing. Natijani har bir til bo‘yicha alohida test qiling.",
+      "generated": ""
+    },
+    {
+      "prompt": "Code review nima?",
+      "expected": "Code review — boshqa odam yoki avtomatik tekshiruv o‘zgarishlarni xatolar, xavfsizlik, tushunarlilik va standartlarga moslik bo‘yicha ko‘rib chiqishi. Muallifning o‘zgarishiga hurmat bilan, aniq misol va yechim taklif qilib fikr bildiring.",
+      "generated": ""
+    },
+    {
+      "prompt": "Git branch nima?",
+      "expected": "Branch asosiy tarmoqni o‘zgartirmasdan alohida ish olib borishga yordam beradi. Masalan: git switch -c feature/chat-history. Ish tugagach test qiling va o‘zgarishni pull request yoki merge orqali qo‘shing.",
+      "generated": ""
+    },
+    {
+      "prompt": "Docker nima?",
+      "expected": "Docker ilovani va uning dependencylarini konteyner ichida ishga tushirishga yordam beradi. Image quriladi, container esa shu image asosida ishlaydi. Kichik image, aniq versiyalar va maxfiy ma’lumotlarni image ichiga kiritmaslik muhim.",
+      "generated": ""
+    },
+    {
+      "prompt": "Log yozishda maxfiylikni qanday saqlash kerak?",
+      "expected": "Parol, token, shaxsiy xabar va maxfiy kalitlarni logga yozmang. Kerakli request ID, vaqt, status va xato kodini yozing; logga kirishni cheklang va saqlash muddatini belgilang.",
+      "generated": ""
+    },
+    {
+      "prompt": "Modelning javobini tekshirish uchun test misoli.",
+      "expected": "Savol: ‘Python’da 2 va 3 ni qo‘sh.’ Kutilgan xususiyat: javob ishlaydigan kod berishi va natija 5 bo‘lishini to‘g‘ri tushuntirishi. Testlar aniq mezonli bo‘lsin, faqat so‘zma-so‘z bitta javobni talab qilmasin.",
+      "generated": ""
+    }
+  ]
+}

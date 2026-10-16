@@ -4,11 +4,11 @@
 
 import { HttpError, json, clampStr, clampInt, safeEqual } from "./lib/util.js";
 import { generate, friendlyError } from "./lib/ai.js";
-import { resolveModels, pickModelKey, fallbackChain, IMAGE_MODELS, VIDEO_MODEL } from "./lib/models.js";
+import { pickModelKey } from "./lib/models.js";
 import { buildSystemPrompt } from "./lib/prompts.js";
 import { searchWeb, wantsSearch, formatSourcesForPrompt } from "./lib/search.js";
 import { generateImage } from "./lib/image.js";
-import { planVideo, startReplicateVideo, replicateStatus, replicateConfigured } from "./lib/video.js";
+import { planVideo } from "./lib/video.js";
 
 const VERSION = "2.0.0";
 const MAX_HISTORY_MESSAGES = 24;
@@ -60,12 +60,12 @@ async function route(request, env, ctx, url) {
     return json(await planVideo(env, { idea: b.idea, seconds: b.seconds, aspect: String(b.aspect || "16:9") }));
   }
   if (pathname === "/api/video/generate" && method === "POST") {
-    rateLimit(request, "vgen", 4);
-    const b = await readJson(request);
-    return json(await startReplicateVideo(env, { prompt: b.prompt }));
+    throw new HttpError(503,
+      "Tashqi video AI o‘chirildi. Zumrad’ning o‘z video modeli hali yaratilmagan; OWN_VIDEO_URL bilan o‘zingiz joylashtirgan modelni ulash kerak.",
+      "own_video_not_configured");
   }
   if (pathname === "/api/video/status" && method === "GET") {
-    return json(await replicateStatus(env, url.searchParams.get("id") || ""));
+    throw new HttpError(503, "Zumrad’ning o‘z generativ video modeli hali ulanmagan.", "own_video_not_configured");
   }
   if (pathname === "/api/search" && method === "GET") {
     rateLimit(request, "search", 20);
@@ -125,17 +125,18 @@ async function readJson(request) {
 /* ---------------- health ---------------- */
 
 function health(env) {
-  const models = resolveModels(env);
   return json({
     ok: true,
-    version: VERSION,
-    ai: Boolean(env.AI),
+    version: "3.0.0-own-model-only",
+    ai: Boolean(env.OWN_MODEL_URL),
+    aiMode: "own-model-only",
+    externalAiModels: false,
+    ownModelConfigured: Boolean(env.OWN_MODEL_URL),
+    ownImageModelConfigured: Boolean(env.OWN_IMAGE_URL),
+    ownVideoModelConfigured: Boolean(env.OWN_VIDEO_URL),
     accessCode: Boolean(env.ACCESS_CODE),
-    models: Object.fromEntries(["fast", "smart", "code"].map((k) => [k, { id: models[k].id, label: models[k].label }])),
-    image: { fast: IMAGE_MODELS.fast.label, hq: IMAGE_MODELS.hq.label },
-    videoLabel: VIDEO_MODEL.label,
     search: env.TAVILY_API_KEY ? "tavily" : env.BRAVE_API_KEY ? "brave" : "duckduckgo",
-    video: { montage: Boolean(env.AI), generative: replicateConfigured(env) },
+    video: { montage: false, generative: false, ownModelConfigured: Boolean(env.OWN_VIDEO_URL) },
   });
 }
 
@@ -163,8 +164,8 @@ function normalizeMessages(raw) {
 }
 
 async function handleChat(request, env) {
-  if (!env.AI) {
-    throw new HttpError(503, "AI ulanmagan. Cloudflare’da Workers AI binding (nomi: AI) qo‘shing — DEPLOY.md ga qarang.", "no_ai");
+  if (!env.OWN_MODEL_URL) {
+    throw new HttpError(503, "Zumrad AI’ning o‘z modeli hali ulanmagan. OWN_MODEL_URL ni o‘zingiz joylashtirgan model serveriga sozlang. Tashqi AI modeli chaqirilmaydi.", "own_model_not_configured");
   }
   const body = await readJson(request);
   const messages = normalizeMessages(Array.isArray(body.messages) ? body.messages : []);
@@ -172,9 +173,10 @@ async function handleChat(request, env) {
   if (!last || last.role !== "user") throw new HttpError(400, "Oxirgi xabar foydalanuvchidan bo‘lishi kerak.");
 
   const hasImages = last.images.length > 0;
-  const modelKey = pickModelKey(body.model, { text: last.content, hasImages });
-  const keys = fallbackChain(modelKey, { hasImages });
-  const models = resolveModels(env);
+  if (hasImages) {
+    throw new HttpError(503, "Rasmni tushunadigan o‘z Zumrad vision modelimiz hali tayyor emas. Rasm tahlili uchun tashqi model chaqirilmaydi.", "own_vision_not_configured");
+  }
+  const modelKey = pickModelKey(body.model, { text: last.content, hasImages: false });
 
   // Internet qidiruvi
   const webMode = body.web === "on" || body.web === "off" ? body.web : "auto";
@@ -194,14 +196,7 @@ async function handleChat(request, env) {
     if (isLast && sources.length) {
       text += `\n\n---\nInternet qidiruv natijalari (ularga [1], [2] deb havola bering):\n${formatSourcesForPrompt(sources)}`;
     }
-    if (isLast && hasImages && models[keys[0]].vision) {
-      modelMessages.push({
-        role: "user",
-        content: [{ type: "text", text: text || "Rasmni tasvirlab ber." }, ...m.images.map((url) => ({ type: "image_url", image_url: { url } }))],
-      });
-    } else {
-      modelMessages.push({ role: m.role, content: text });
-    }
+    modelMessages.push({ role: m.role, content: text });
   });
 
   const maxTokens = clampInt(body.max_tokens, 200, 6000, modelKey === "code" ? 4500 : 2500);
@@ -211,7 +206,7 @@ async function handleChat(request, env) {
   if (body.stream === false) {
     let text = "";
     let model = null;
-    for await (const ev of generate(env, { messages: modelMessages, keys, maxTokens, temperature })) {
+    for await (const ev of generate(env, { messages: modelMessages, maxTokens, temperature })) {
       if (ev.type === "model") model = ev;
       if (ev.type === "token") text += ev.t;
     }
@@ -227,7 +222,7 @@ async function handleChat(request, env) {
       };
       try {
         send({ type: "meta", modelKey, sources, searchProvider });
-        for await (const ev of generate(env, { messages: modelMessages, keys, maxTokens, temperature, signal: { get aborted() { return cancelled; } } })) {
+        for await (const ev of generate(env, { messages: modelMessages, maxTokens, temperature, signal: { get aborted() { return cancelled; } } })) {
           send(ev);
           if (cancelled) break;
         }

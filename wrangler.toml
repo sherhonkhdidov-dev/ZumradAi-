@@ -22,8 +22,9 @@ enabled = true
 #   ACCESS_CODE            — saytga kirish kodi (kvotangizni begonalardan himoya qiladi)
 #   TAVILY_API_KEY         — sifatli internet qidiruvi (tavily.com, bepul reja bor)
 #   BRAVE_API_KEY          — muqobil qidiruv (Brave Search API)
-#   REPLICATE_API_TOKEN    — generativ video uchun (ixtiyoriy, pullik)
-#   REPLICATE_VIDEO_MODEL  — masalan "owner/model-nomi"
-#   REPLICATE_VIDEO_INPUT  — qo‘shimcha parametrlar JSON ko‘rinishida (ixtiyoriy)
-#   MODEL_FAST / MODEL_SMART / MODEL_CODE — modellarni almashtirish (Workers AI model ID)
+#   OWN_MODEL_URL         — o‘zingizning Zumrad matn modeli serveri (masalan Render URL)
+#   OWN_MODEL_TOKEN       — ixtiyoriy server tokeni; serverdagi OWN_MODEL_TOKEN bilan bir xil
+#   OWN_IMAGE_URL         — faqat o‘zingizning rasm modelingiz API manzili
+#   OWN_IMAGE_TOKEN       — ixtiyoriy rasm serveri tokeni
+#   OWN_VIDEO_URL         — kelajakdagi o‘z video modelingiz API manzili
 # ---------------------------------------------------------------------------

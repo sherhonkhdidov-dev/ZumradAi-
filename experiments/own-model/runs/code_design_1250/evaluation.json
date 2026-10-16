@@ -1,0 +1,69 @@
+{
+  "checkpoint": "out_code_design/best_model.pt",
+  "examples": 12,
+  "mean_chunk_loss": 4.511235841115316,
+  "perplexity_estimate": 91.03425289333059,
+  "warning": "Character-level model; these metrics are diagnostic only and do not establish answer correctness. Review generated outputs manually.",
+  "results": [
+    {
+      "prompt": "CSS’da ikki ustunli layoutni kichik ekranda bitta ustunga o‘tkaz.",
+      "expected": " .layout { display:grid; grid-template-columns: 1fr 1fr; gap:1rem; }\n@media (max-width: 640px) { .layout { grid-template-columns: 1fr; } }",
+      "generated": "foydalaning. Fratishga kodni bilan uchun ishlatibilan uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatizaynozaynozaynozaynozaynozaynozaynozaynni bir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynozaynozaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishla"
+    },
+    {
+      "prompt": "Python’da lug‘atdagi kalit borligini qanday tekshiraman?",
+      "expected": "foydalanuvchi = {\"ism\": \"Ali\"}\nif \"ism\" in foydalanuvchi:\n    print(foydalanuvchi[\"ism\"])",
+      "generated": "foydalaning. M — ratishga klaydi. M uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatizaynoshqa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa"
+    },
+    {
+      "prompt": "UI’da bo‘sh holatni qanday loyihalash kerak?",
+      "expected": "Bo‘sh holat foydalanuvchiga nima uchun ro‘yxat bo‘shligini tushuntirsin va keyingi amaliy qadamni taklif qilsin. Masalan, “Hozircha loyiha yo‘q” va “Yangi loyiha yaratish” tugmasi.",
+      "generated": "funkir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatizaynozaynozaynoshqarishga klaydi. Masiy sozaynozaynozaynozaynni bir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynozaynozaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlati"
+    },
+    {
+      "prompt": "Explain semantic HTML briefly.",
+      "expected": "Semantic HTML uses elements according to their meaning, such as main, nav, article, and button. It improves accessibility, maintainability, and helps browsers and assistive technology understand page structure.",
+      "generated": "frathasiy sosig(nce.cemarg(ncemarg(nce.g()"
+    },
+    {
+      "prompt": "API javobida maxfiy xatoni ko‘rsatish kerakmi?",
+      "expected": "Foydalanuvchiga ichki stack trace, token yoki database tafsilotini ko‘rsatmang. Umumiy, foydali xabar qaytaring; batafsil xatoni esa himoyalangan server logida saqlang.",
+      "generated": "funkodni bir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibirity sozaynozaynozaynozaynozaynozaynozaynozaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynozaynozaynni bir uchun ishlatizaynozaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir"
+    },
+    {
+      "prompt": "CSS’da tugma hover va focus holatini ko‘rsat.",
+      "expected": "button:hover { filter: brightness(1.08); }\nbutton:focus-visible { outline: 3px solid #9c8cff; outline-offset: 3px; }",
+      "generated": "funkodni berror; foydalaning. 500000000000000000100000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "prompt": "What is the difference between frontend and backend?",
+      "expected": "Frontend is the user-facing interface running in a browser or app. Backend handles server-side logic, authentication, data access, and integrations. They communicate through APIs.",
+      "generated": "frathif — ratda kodni bir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatizaynozaynozaynozaynozaynozaynni bir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatizaynni bir uchun ishlatizaynozaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynozaynni bir uchun ishlatizaynozaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni b"
+    },
+    {
+      "prompt": "HTML’da tashqi linkni yangi tabda xavfsiz ochish",
+      "expected": "<a href=\"https://example.com\" target=\"_blank\" rel=\"noopener noreferrer\">Saytni ochish</a>",
+      "generated": "fratishga kir uchun ishlatibir uchun ishlatibilan uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatizaynozaynozaynozaynozaynozaynozaynozaynni bir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynozaynozaynozaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir"
+    },
+    {
+      "prompt": "Kod sifatini qanday o‘lchash mumkin?",
+      "expected": "Testlar, statik tahlil, lint, type checking, code review, xavfsizlik tekshiruvi va real foydalanishdagi xatolarni birga ko‘ring. Bitta metrika kod sifatini to‘liq ifodalamaydi.",
+      "generated": "foydalaning. Fratus, 1001001000000000000000001000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "prompt": "Dizayn uchun 8px spacing tizimi nima?",
+      "expected": "Bu masofa qiymatlarini 8px ko‘paytmalari atrofida tartibga solish usuli, masalan 8, 16, 24 va 32px. Bu izchillikni osonlashtiradi, lekin kichik optik tuzatishlar zarur bo‘lishi mumkin.",
+      "generated": "foydalaning. Memoni bir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatizaynozaynozaynozaynozaynozaynozaynozaynozaynozaynni bir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynozaynozaynozaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun ishlatizaynni bir uchun"
+    },
+    {
+      "prompt": "Как безопасно хранить секрет API?",
+      "expected": "Храните секрет на сервере в переменной окружения или secret storage. Не добавляйте его в frontend, публичный репозиторий, логи или клиентское хранилище.",
+      "generated": "и данананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананананана"
+    },
+    {
+      "prompt": "Zumrad AI modeliga yangi ma’lumot qo‘shganda nima qilish kerak?",
+      "expected": "Ma’lumot manbasi va litsenziyasini tekshiring, JSONL formatini validatsiya qiling, takroriy va sifatsiz misollarni olib tashlang, validation to‘plamini alohida saqlang va yangi checkpointni avvalgi natijalar bilan solishtiring.",
+      "generated": "fratda klaydi. M uchun yparol uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatibir uchun ishlatizaynoshqa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa qa"
+    }
+  ]
+}

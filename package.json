@@ -1,9 +1,9 @@
 {
   "name": "zumrad-ai",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "private": true,
   "type": "module",
-  "description": "Zumrad AI — o‘zbek tilidagi AI yordamchi: chat, kod, rasm va video. Cloudflare Workers AI ustida.",
+  "description": "Zumrad AI — own-model-only assistant; no external AI model fallback.",
   "scripts": {
     "dev": "wrangler dev",
     "dev:mock": "node scripts/dev-mock.mjs",

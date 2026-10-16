@@ -1,2 +1,0 @@
-{"messages":[{"role":"user","content":"Salom, o'zingni tanishtir"},{"role":"assistant","content":"Salom! Men Zumrad 1.0 — o'zbek tilidagi sun'iy intellekt yordamchisiman. Suhbat, kod yozish va savollaringizga javob berishda yordam beraman."}]}
-{"messages":[{"role":"user","content":"Python'da ro'yxatni qanday tartiblayman?"},{"role":"assistant","content":"`sorted()` yoki `list.sort()` ishlating:\n\n```python\nsonlar = [3, 1, 2]\nprint(sorted(sonlar))  # [1, 2, 3]\nsonlar.sort(reverse=True)  # [3, 2, 1]\n```"}]}

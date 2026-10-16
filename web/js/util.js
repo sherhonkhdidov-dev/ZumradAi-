@@ -105,7 +105,6 @@ const TEXT_EXT =
   /\.(txt|md|markdown|json|jsonl|js|mjs|cjs|ts|tsx|jsx|vue|svelte|py|html?|css|scss|sass|less|sql|xml|ya?ml|toml|ini|env|sh|bash|zsh|bat|ps1|java|kt|kts|swift|c|h|cpp|hpp|cc|cs|go|rs|php|rb|dart|lua|r|csv|tsv|log|gradle|properties|dockerfile)$/i;
 
 export const isTextFile = (f) => f.type.startsWith("text/") || /json|xml|javascript/.test(f.type) || TEXT_EXT.test(f.name) || /^(dockerfile|makefile)$/i.test(f.name);
-export const isZipFile = (f) => /\.zip$/i.test(f.name) || /zip/.test(f.type);
 export const isImageFile = (f) => /^image\/(png|jpe?g|webp|gif)$/.test(f.type);
 
 export function debounce(fn, ms) {

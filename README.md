@@ -1,62 +1,67 @@
-# Zumrad AI
+# Zumrad AI — Own Model Only
 
-O‘zbek tilidagi AI yordamchi: **suhbat, kod (jonli ko‘rinish bilan), rasm va video**. Zumrad 1.0 (suhbat), Zumrad 1.3 (rasm), Zumrad 1.5 (video) — ichki motor Cloudflare Workers AI dagi tayyor ochiq modellar; alohida server ham, API kaliti ham kerak emas. O'z og'irliklaringizni o'qitish uchun `finetune/` papkasiga qarang.
+Zumrad AI loyihasi foydalanuvchining talabiga ko‘ra **boshqa tayyor AI modellarini chaqirmaydigan** rejimga o‘tkazildi.
 
-## Nimalar qila oladi
+## Muhim haqiqat
 
-| | Qanday ishlaydi |
-|---|---|
-| **Suhbat** | Oqimli (harf-harf) javob. Model avtomatik tanlanadi: oddiy savol → Gemma 4, kod → Qwen 2.5 Coder, qo‘lda “Aqlli” → Llama 3.3 70B. Biri ishlamasa, zaxira modelga o‘tadi. |
-| **Kod** | To‘liq, ishlaydigan fayllar yozadi. Har fayl alohida blokda, nusxa/yuklab olish bilan. HTML/SVG uchun **jonli ko‘rinish** (telefon/planshet/kompyuter o‘lchamida), ko‘p fayl uchun **ZIP**. Ko‘rinishda xato chiqsa, “AI bilan tuzatish” tugmasi xatoni AI ga yuboradi. |
-| **Dizayn** | Tizim ko‘rsatmasida dizayn qoidalari bor: mobil-birinchi, aniq palitra va shrift, real matn (lorem ipsum yo‘q), ishlaydigan formalar va holatlar. |
-| **Rasm** | O‘zbekcha tavsifni AI avval inglizcha professional promptga aylantiradi, keyin FLUX.1 schnell (tez) yoki Lucid Origin (sifatli, o‘lchamni tanlash mumkin) chizadi. |
-| **Video** | AI ssenariy yozadi → har kadr FLUX bilan chiziladi → brauzer kadrlarni kino-harakat, o‘tishlar, subtitr va musiqa bilan **haqiqiy MP4/WebM faylga** yig‘adi. Tashqi xizmat kerak emas. Ixtiyoriy: Replicate orqali generativ model. |
-| **Rasm tahlili** | Rasm tashlasangiz, Gemma 4 uni ko‘radi va tushuntiradi. Matn/kod fayllari ham o‘qiladi. |
-| **Internet** | Yangilik, narx, bugungi voqealar so‘ralsa, avtomatik qidiradi va manbalarni `[1]` havolalari bilan ko‘rsatadi. |
-| **Saqlash** | Suhbatlar, rasmlar, videolar shu qurilma brauzerida (IndexedDB) saqlanadi. PWA sifatida telefonga o‘rnatiladi. |
+- Chat va kod javoblari faqat `OWN_MODEL_URL` orqali o‘zingiz joylashtirgan Zumrad model serveriga yuboriladi.
+- Workers AI, Gemma, Llama, Qwen, FLUX, Lucid va Replicate endi ilovaning chat/rasm/video yo‘llarida chaqirilmaydi.
+- `experiments/own-model/` ichidagi TinyZumradLM noldan yozilgan kichik Transformer; unga sodda, o‘zimiz yozgan Unicode pair-merge BPE tokenizer qo‘shildi. U hali kuchli, ko‘p tilli yoki kodga ixtisoslashgan model emas. Uni kichik matnlar bilan o‘qitish Claude darajasidagi natija bermaydi.
+- O‘z rasm va video modellari hozircha yo‘q. Ilova tashqi modelni yashirincha ishlatmaydi; tegishli o‘z modelingiz ulanmaguncha aniq xato xabari ko‘rsatadi.
+- Internet qidiruvi (DuckDuckGo/Tavily/Brave) AI modeli emas, lekin tashqi internet xizmatidir. U alohida qidiruv funksiyasi sifatida qoladi.
 
-## Muhim cheklovlar (ochiq aytamiz)
+## Tuzilma
 
-- **Bepul kvota**: Cloudflare kuniga 10 000 “neyron” beradi (UTC 00:00, ya’ni 05:00 Toshkent vaqti bilan yangilanadi). Taxminiy sig‘im: ~250 ta oddiy javob, ~35 ta uzun kod javobi, ~100 ta rasm yoki ~15–20 ta video. Tugasa, ilova buni tushunarli xabar bilan aytadi. “Sifatli” rasm kvotani ~20 baravar tez sarflaydi.
-- **Video** — “kino-montaj”: AI chizgan statik kadrlar harakatga keltiriladi. Bu Sora/Veo kabi to‘liq generativ video emas. Montaj paytida (~10–30 s) ekranni o‘chirmang.
-- Model sifati tanlangan modellarga bog‘liq; Claude bilan bir xil emas. Modellarni almashtirish — `wrangler.toml` dagi izohga qarang.
-- Ochiq saytga **kirish kodi** qo‘ying (`ACCESS_CODE`), aks holda begonalar kvotangizni ishlatib yuboradi.
+- `worker/` — Cloudflare Worker API va veb ilova.
+- `experiments/own-model/` — o‘z matn modelini o‘qitish va ishga tushirish kodi.
+- `OWN_MODEL_URL` — o‘zingiz joylashtirgan matn modeli serverining asosiy URL manzili. Worker `/api/chat` endpointiga so‘rov yuboradi.
+- `OWN_IMAGE_URL` — faqat keyinchalik o‘zingiz ishlab chiqqan rasm modeli API manzili.
+- `OWN_VIDEO_URL` — kelajakdagi o‘z video modeli API manzili uchun ajratilgan sozlama.
 
-## Loyiha tuzilmasi
+## O‘z modelini o‘qitish laboratoriyasi
 
-```
-worker/            Cloudflare Worker (API)
-  index.js         marshrutlar, xavfsizlik, chat oqimi
-  lib/prompts.js   AI "miyasi": tizim ko‘rsatmalari (kod, dizayn, tillar)
-  lib/models.js    modellar va tanlash mantiqi
-  lib/ai.js        Workers AI bilan ishlash, oqim, zaxira modellar
-  lib/image.js     rasm: prompt boyitish + FLUX/Lucid
-  lib/video.js     video ssenariy (+ ixtiyoriy Replicate)
-  lib/search.js    internet qidiruvi
-web/               Frontend (build kerak emas)
-  js/              chat, preview, media, videoRender, store...
-  css/app.css      dizayn tizimi
-  vendor/          marked, DOMPurify, highlight.js, JSZip (ichiga joylangan)
-tests/             Worker testlari (20 ta)
-scripts/           mock server va brauzer sinovlari
-experiments/       eski tajribalar (ilovaga kirmaydi)
+`experiments/own-model/README.md` va `TRAINING_PLAN.md` ichida matn/kod, rasm diffusion va video 3D diffusion uchun alohida o‘qitish buyruqlari bor. 68 ta boshlang‘ich o‘zbekcha/kod misoli, alohida validation to‘plami, dataset tekshiruvi va baholash skripti qo‘shilgan. Qisqa treningni ishga tushirdik, ammo checkpoint javoblari hozircha sifatsiz; u ishlab chiqarishda ishlatishga tayyor emas. Bular tayyor o‘qitilgan modellar emas: rasm modeli hozircha promptni tushunmaydi, video modeli tadqiqot darajasida. Litsenziyali ma’lumotlar va GPU kerak.
+
+## O‘z matn modelingizni o‘qitish
+
+1. Python 3.11+ va PyTorch o‘rnatilgan kompyuter/server kerak. Android telefonda o‘qitish juda sekin yoki imkonsiz bo‘lishi mumkin.
+2. `experiments/own-model/` ichida `data/` papkasini yarating.
+3. O‘zingizga tegishli yoki foydalanishga ruxsatingiz bor `.txt` ma’lumotlarni `data/` ichiga joylang. O‘zbekcha suhbat, tushuntirish va kod misollari sifatli, toza bo‘lsin.
+4. O‘sha papkada quyidagilarni bajaring:
+
+```bash
+pip install -r requirements.txt
+python train.py --data data --steps 5000
+uvicorn server:app --host 0.0.0.0 --port 8000
 ```
 
-## Mahalliy ishga tushirish
+O‘qitish `out/model.pt`, `out/best_model.pt`, `out/tokenizer.json` va `out/vocab.json` yaratadi. `server.py` faqat shu vaznlar mavjud bo‘lsa javob beradi. Bu minimal tajriba kodi; natija ma’lumotlar hajmi/sifati va hisoblash quvvatiga bog‘liq.
+
+## Cloudflare ulash
+
+1. O‘z model serveringizni HTTPS orqali joylashtiring.
+2. Cloudflare Worker → Settings → Variables and Secrets bo‘limida `OWN_MODEL_URL` ni server URL’iga sozlang.
+3. Serverda `OWN_MODEL_TOKEN` ishlatsangiz, Worker’da ham xuddi shu qiymatni Secret sifatida qo‘shing.
+4. Deploy qiling va `/api/health` ni oching. `aiMode` `own-model-only` bo‘lishi kerak.
+5. `/health` server endpointi `trained_model_loaded: true` qaytarsa, vaznlar yuklangan.
+
+## Rasm va video
+
+Hozircha o‘z rasm/video generatsiya modeli tayyor emas. `OWN_IMAGE_URL` yoki `OWN_VIDEO_URL` ni faqat o‘zingizning haqiqiy model serveringiz bo‘lganda sozlang. Bu loyiha ichida hozircha o‘qitilgan rasm/video neyron tarmoqlari mavjud emas; oddiy matn modelini o‘qitishning o‘zi rasm yoki video generatsiya qila olmaydi.
+
+## Test
 
 ```bash
 npm install
-npm test             # Worker testlari (Cloudflare hisobi shart emas)
-npm run dev:mock     # soxta AI bilan to‘liq interfeys: http://localhost:8788
-npm run dev          # haqiqiy Workers AI bilan (wrangler login kerak)
+npm test
 ```
 
-Brauzer sinovlari (ixtiyoriy): `npm i -D playwright && npx playwright install chromium`, so‘ng `npm run dev:mock` ishlab turganda `node scripts/ui-smoke.mjs`.
 
-## AI ni “o‘rgatish” (sozlash)
+## Content Credentials (C2PA)
 
-AI ning xulqi `worker/lib/prompts.js` da. Masalan, javob uslubini, dizayn qoidalarini yoki kod yozish talablarini o‘sha yerda o‘zgartirasiz — qayta o‘qitish kerak emas. Rasm prompti qoidalari (`IMAGE_PROMPT_SYSTEM`) va video ssenariy shabloni (`videoPlanSystem`) ham shu faylda.
+See `experiments/own-model/CONTENT_CREDENTIALS_C2PA.md` and `add_content_credentials.py` for adding signed provenance manifests to generated media. Signing requires server-side certificate/key credentials; no private key is bundled.
 
-## Deploy
 
-GitHub → Cloudflare bo‘yicha qadamma-qadam qo‘llanma: **[DEPLOY.md](DEPLOY.md)**.
+## Code & Design Studio (v12)
+
+Open `/studio.html` after deployment for the new local project starter builder. It creates portfolio, school dashboard, online shop, and SaaS dashboard projects, with live preview and downloadable ZIP output. This is template-assisted and does not pretend the tiny own-model checkpoint is already professional. See `PROFESSIONAL_FULL_V12.md`.

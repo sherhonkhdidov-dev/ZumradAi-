@@ -1,0 +1,4 @@
+{"manifest_version":3,"name":"Zumrad Brauzer Boshqaruvi","version":"1.0.0","description":"Zumrad AI ovozli buyruqlarini brauzerda bajaradi.",
+"permissions":["tabs","scripting","activeTab"],"host_permissions":["<all_urls>"],
+"background":{"service_worker":"background.js"},
+"content_scripts":[{"matches":["<all_urls>"],"js":["content.js"],"run_at":"document_idle"}]}

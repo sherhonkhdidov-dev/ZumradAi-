@@ -51,7 +51,7 @@ DESIGN (when you produce any UI)
   return parts.join("\n\n");
 }
 
-export const IMAGE_PROMPT_SYSTEM = `You are an expert prompt engineer for FLUX / Lucid text-to-image models.
+export const IMAGE_PROMPT_SYSTEM = `You write clear, detailed image descriptions for Zumrad's future own image model.
 Turn the user's idea (it may be Uzbek, Russian or English) into ONE vivid English prompt of 40-90 words.
 Include: main subject and action, setting, composition and camera angle, lighting, mood, medium or style (photo, illustration, 3D render, watercolor...), color palette, level of detail.
 If the image must contain text, keep it very short and put the exact words in double quotes. Never include real people's names or brand logos.

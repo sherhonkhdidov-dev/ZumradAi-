@@ -1,0 +1,12 @@
+{
+  "version": "v10-code-design-training",
+  "training_records_added": 67,
+  "validation_records": 12,
+  "ui_files_preserved": true,
+  "web_css_sha256": "7dfe4695c5b7c465ffd53c5a35eff97cefc2702deeeb306be3d9368b7234698f",
+  "web_index_sha256": "9428d271592a305f75c588c85cb697857c2ead96dc6484dccd9049fc113baa0b",
+  "note": "Dataset expansion only; no claim that the model is now professional or that image/video generation is solved.",
+  "checkpoint_step": 1250,
+  "validation_loss": 4.398777484893799,
+  "evaluation_status": "still repetitive; not production-ready"
+}

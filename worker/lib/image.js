@@ -1,9 +1,6 @@
-// Rasm generatsiyasi: o'zbekcha tavsif -> (AI orqali) inglizcha professional prompt -> Flux / Lucid.
-
-import { HttpError, bytesToBase64, clampStr, imageResultToBytes, sniffImageMime } from "./util.js";
-import { complete } from "./ai.js";
-import { IMAGE_MODELS } from "./models.js";
-import { IMAGE_PROMPT_SYSTEM } from "./prompts.js";
+// Rasm faqat foydalanuvchining o‘zi joylashtirgan Zumrad rasm modeli orqali yaratiladi.
+// Tayyor tashqi rasm modellari yoki LLM orqali prompt boyitish chaqirilmaydi.
+import { HttpError, clampStr } from "./util.js";
 
 export const ASPECTS = {
   "1:1": [1024, 1024],
@@ -13,69 +10,33 @@ export const ASPECTS = {
   "3:4": [864, 1152],
 };
 
-export async function enhanceImagePrompt(env, idea, aspect = "1:1") {
-  const { text } = await complete(env, {
-    key: "fast",
-    maxTokens: 400,
-    temperature: 0.7,
-    messages: [
-      { role: "system", content: IMAGE_PROMPT_SYSTEM },
-      { role: "user", content: `Aspect ratio: ${aspect}\nIdea: ${idea}` },
-    ],
-  });
-  const cleaned = text.replace(/^["'`\s]+|["'`\s]+$/g, "").replace(/^prompt:\s*/i, "");
-  if (cleaned.length < 12) throw new Error("prompt juda qisqa");
-  return cleaned;
-}
-
-export async function generateImage(env, { prompt, quality = "fast", aspect = "1:1", enhance = true }) {
-  if (!env.AI) throw new HttpError(503, "Rasm yaratish uchun Workers AI (AI binding) ulanmagan.", "no_ai");
+export async function generateImage(env, { prompt, quality = "fast", aspect = "1:1" }) {
+  const base = String(env.OWN_IMAGE_URL || "").trim().replace(/\/+$/, "");
+  if (!base) {
+    throw new HttpError(503,
+      "Zumrad AI’ning o‘z rasm modeli hali tayyor yoki ulanmagan. OWN_IMAGE_URL bilan o‘zingiz o‘qitgan/joylashtirgan rasm modelini ulang. Hozircha tashqi tayyor rasm modeli ishlatilmaydi.",
+      "own_image_not_configured");
+  }
   const original = clampStr(prompt, 1500).trim();
   if (!original) throw new HttpError(400, "Rasm uchun tavsif yozing.");
   if (!ASPECTS[aspect]) aspect = "1:1";
-
-  let finalPrompt = original;
-  let enhanced = false;
-  if (enhance) {
-    try {
-      finalPrompt = await enhanceImagePrompt(env, original, aspect);
-      enhanced = true;
-    } catch (e) {
-      if (/daily free allocation|4006/i.test(String(e?.message))) throw e;
-      finalPrompt = original; // boyitish bo'lmasa, asl tavsif bilan davom etamiz
-    }
-  }
-  finalPrompt = finalPrompt.slice(0, 1900);
-
-  let result;
-  let modelInfo;
-  if (quality === "hq") {
-    modelInfo = IMAGE_MODELS.hq;
-    const [width, height] = ASPECTS[aspect];
-    result = await env.AI.run(modelInfo.id, {
-      prompt: finalPrompt,
-      width,
-      height,
-      steps: 20,
-      num_steps: 20,
-      guidance: 4.5,
-      seed: Math.floor(Math.random() * 2_000_000_000),
-    });
-  } else {
-    modelInfo = IMAGE_MODELS.fast;
-    result = await env.AI.run(modelInfo.id, { prompt: finalPrompt, steps: 6 });
-  }
-
-  const bytes = await imageResultToBytes(result);
+  const headers = { "content-type": "application/json" };
+  if (env.OWN_IMAGE_TOKEN) headers.authorization = `Bearer ${env.OWN_IMAGE_TOKEN}`;
+  const response = await fetch(`${base}/api/image`, {
+    method: "POST", headers,
+    body: JSON.stringify({ prompt: original, quality, aspect, width: ASPECTS[aspect][0], height: ASPECTS[aspect][1] }),
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new HttpError(502, data.detail || data.error || "Zumrad o‘z rasm modeli xato qaytardi.", "own_image_error");
+  if (!data.image && !data.url) throw new HttpError(502, "O‘z rasm modeli image yoki url qaytarmadi.", "own_image_bad_response");
   return {
-    image: bytesToBase64(bytes),
-    mime: sniffImageMime(bytes),
-    prompt: finalPrompt,
+    ...data,
+    prompt: original,
     original,
-    enhanced,
-    model: modelInfo.id,
-    modelLabel: modelInfo.label,
+    enhanced: false,
+    model: data.model || "Zumrad Own Image Model",
+    modelLabel: "Zumrad Own Image Model",
     quality,
-    aspect: quality === "hq" ? aspect : "1:1",
+    aspect,
   };
 }
