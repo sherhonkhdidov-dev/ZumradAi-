@@ -1,3 +1,0 @@
-# Optional dependency for embedding signed C2PA Content Credentials
-# Install in a supported Python environment:
-c2pa-python

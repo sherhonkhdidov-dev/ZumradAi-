@@ -4,7 +4,7 @@ Bu versiya boshqa tayyor AI modellarini ishlatmaydi. Cloudflare Worker faqat siz
 
 ## 1. Avval o‘z matn modelini o‘qiting
 
-`experiments/own-model/README.md` ko‘rsatmalarini bajaring. Python/PyTorch serveri va model vaznlari kerak. O‘qitilmagan model javob bera olmaydi. Bu kichik character-level tajriba modeli; Claude sifatidagi javoblarni kutmang.
+Python/PyTorch serveri va o‘qitilgan model vaznlari kerak. O‘qitilmagan model javob bera olmaydi.
 
 ## 2. Model serverini joylashtirish
 

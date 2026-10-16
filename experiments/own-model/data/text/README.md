@@ -1,1 +1,0 @@
-Put your own UTF-8 `.txt` learning material here: Uzbek explanations, programming tutorials you wrote, documentation you have rights to use, and high-quality example conversations. More data is not automatically better; clean and correct examples matter.
