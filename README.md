@@ -13,6 +13,11 @@ Zumrad AI — o‘zbek tilidagi AI yordamchi: chat, kod, rasm/video, ovozli bosh
 
 ## Sozlamalar (Cloudflare → Settings → Variables and Secrets)
 
+Miya manbalari ketma-ket sinaladi (biri limitga yetsa keyingisiga o‘tadi): `OWN_MODEL_URL` → `GEMINI_API_KEY` → `GROQ_API_KEY` → Cloudflare Workers AI (bepul zaxira, `[ai]` binding).
+
+- `GEMINI_API_KEY` — bepul, aistudio.google.com (karta shart emas). Tavsiya etiladi.
+- `GROQ_API_KEY` — bepul, console.groq.com.
+
 - `OWN_MODEL_URL` — model serverining HTTPS manzili (masalan Render'dagi `https://zumrad-own-model.onrender.com`).
 - `OWN_MODEL_TOKEN` — Render'da avtomatik yaratiladi; Cloudflare'ga ham xuddi shu qiymatni Secret qilib qo‘shing.
 - `OWN_IMAGE_URL`, `OWN_VIDEO_URL` — faqat o‘z rasm/video model serveringiz bo‘lsa.

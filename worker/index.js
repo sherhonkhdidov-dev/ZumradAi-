@@ -3,7 +3,7 @@
 //              /api/video/generate, /api/video/status, /api/search
 
 import { HttpError, json, clampStr, clampInt, safeEqual } from "./lib/util.js";
-import { generate, friendlyError } from "./lib/ai.js";
+import { generate, friendlyError, hasBrain, providerNames } from "./lib/ai.js";
 import { pickModelKey } from "./lib/models.js";
 import { buildSystemPrompt } from "./lib/prompts.js";
 import { searchWeb, wantsSearch, formatSourcesForPrompt } from "./lib/search.js";
@@ -127,10 +127,11 @@ async function readJson(request) {
 function health(env) {
   return json({
     ok: true,
-    version: "3.0.0-own-model-only",
-    ai: Boolean(env.OWN_MODEL_URL),
-    aiMode: "own-model-only",
-    externalAiModels: false,
+    version: "3.1.0",
+    ai: hasBrain(env),
+    aiMode: providerNames(env).join(" → ") || "none",
+    providers: providerNames(env),
+    externalAiModels: providerNames(env).some((n) => n !== "own"),
     ownModelConfigured: Boolean(env.OWN_MODEL_URL),
     ownImageModelConfigured: Boolean(env.OWN_IMAGE_URL),
     ownVideoModelConfigured: Boolean(env.OWN_VIDEO_URL),
@@ -164,8 +165,8 @@ function normalizeMessages(raw) {
 }
 
 async function handleChat(request, env) {
-  if (!env.OWN_MODEL_URL) {
-    throw new HttpError(503, "Zumrad AI’ning o‘z modeli hali ulanmagan. OWN_MODEL_URL ni o‘zingiz joylashtirgan model serveriga sozlang. Tashqi AI modeli chaqirilmaydi.", "own_model_not_configured");
+  if (!hasBrain(env)) {
+    throw new HttpError(503, "Zumrad AI’ga hali miya ulanmagan. Cloudflare’da GEMINI_API_KEY (bepul, aistudio.google.com) yoki GROQ_API_KEY qo‘shing, yoki OWN_MODEL_URL ni sozlang.", "own_model_not_configured");
   }
   const body = await readJson(request);
   const messages = normalizeMessages(Array.isArray(body.messages) ? body.messages : []);

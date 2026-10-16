@@ -2,6 +2,10 @@ name = "zumradai"
 main = "worker/index.js"
 compatibility_date = "2025-10-01"
 
+# Cloudflare Workers AI — bepul zaxira miya (kunlik bepul limit bor).
+[ai]
+binding = "AI"
+
 # Workers AI — chat, rasm va video ssenariysi uchun (nomi aynan "AI" bo‘lishi shart).
 [ai]
 binding = "AI"

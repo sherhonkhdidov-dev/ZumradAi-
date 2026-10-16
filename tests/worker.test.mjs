@@ -10,24 +10,43 @@ const call = (env, path, init) => worker.fetch(new Request(BASE + path, init), e
 const post = (env, path, body, headers = {}) =>
   call(env, path, { method: "POST", headers: { "content-type": "application/json", ...headers }, body: JSON.stringify(body) });
 
-test("health: own-model-only rejimi va tashqi AI o‘chiq", async () => {
-  const res = await call({ AI: { run() { throw new Error("AI binding ishlatilmasligi kerak"); } } }, "/api/health");
+test("health: manbalar ro‘yxati", async () => {
+  const res = await call({ GEMINI_API_KEY: "k", AI: { run() {} } }, "/api/health");
   const j = await res.json();
   assert.equal(res.status, 200);
-  assert.equal(j.aiMode, "own-model-only");
-  assert.equal(j.externalAiModels, false);
-  assert.equal(j.ownModelConfigured, false);
-  assert.equal(j.ownImageModelConfigured, false);
+  assert.deepEqual(j.providers, ["gemini", "workers-ai"]);
+  assert.equal(j.ai, true);
+  const none = await (await call({}, "/api/health")).json();
+  assert.equal(none.ai, false);
 });
 
-test("chat: o‘z model serveri ulanmagan bo‘lsa aniq 503 beradi", async () => {
-  const res = await post({ AI: { run() { throw new Error("Tashqi AI chaqirildi"); } } }, "/api/chat", {
-    messages: [{ role: "user", content: "Salom" }]
-  });
+test("chat: hech qanday miya ulanmagan bo‘lsa aniq 503 beradi", async () => {
+  const res = await post({}, "/api/chat", { messages: [{ role: "user", content: "Salom" }] });
   const j = await res.json();
   assert.equal(res.status, 503);
   assert.equal(j.code, "own_model_not_configured");
-  assert.match(j.error, /Tashqi AI modeli chaqirilmaydi/);
+});
+
+test("chat: Gemini limitga yetsa Groq ga o‘tadi", async () => {
+  const originalFetch = globalThis.fetch;
+  const urls = [];
+  globalThis.fetch = async (url) => {
+    urls.push(String(url));
+    if (String(url).includes("generativelanguage")) {
+      return new Response(JSON.stringify({ error: { message: "quota" } }), { status: 429, headers: { "content-type": "application/json" } });
+    }
+    return new Response(JSON.stringify({ choices: [{ message: { content: "Salom, men Zumrad!" } }] }), { status: 200, headers: { "content-type": "application/json" } });
+  };
+  try {
+    const res = await post({ GEMINI_API_KEY: "a", GROQ_API_KEY: "b" }, "/api/chat", { stream: false, messages: [{ role: "user", content: "Salom" }] });
+    const j = await res.json();
+    assert.equal(res.status, 200);
+    assert.match(j.reply, /Zumrad/);
+    assert.equal(urls.length, 2);
+    assert.match(urls[1], /groq/);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
 });
 
 test("chat: javob faqat OWN_MODEL_URL serveridan olinadi", async () => {
