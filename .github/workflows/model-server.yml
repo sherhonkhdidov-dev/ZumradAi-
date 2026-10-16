@@ -24,8 +24,8 @@ jobs:
         working-directory: model-server
         run: |
           uvicorn server:app --port 8000 &
-          for i in $(seq 1 30); do curl -sf localhost:8000/health && break; sleep 2; done
-          echo
+          for i in $(seq 1 30); do curl -sf localhost:8000/health > /tmp/health.txt && break; sleep 2; done
           curl -s localhost:8000/api/chat -H 'content-type: application/json' \
-            -d '{"messages":[{"role":"user","content":"Salom"}],"max_new_tokens":80}'
-          echo
+            -d '{"messages":[{"role":"user","content":"Salom"}],"max_new_tokens":80}' > /tmp/reply.txt
+          echo "::notice title=health::$(tr '\n' ' ' < /tmp/health.txt)"
+          echo "::notice title=reply::$(tr '\n' ' ' < /tmp/reply.txt)"
