@@ -10,7 +10,7 @@ import { runImage, runVideo, runGenerativeVideo } from "./media.js";
 import { primeAudio, videoExtension, canRecordVideo } from "./videoRender.js";
 import {
   $, $$, uid, escapeHtml, icon, toast, copyText, downloadBlob, downloadText, formatBytes, blobToDataUrl, downscaleImage,
-  isImageFile, isTextFile, dateGroup, safeFileName,
+  isImageFile, isTextFile, isZipFile, dateGroup, safeFileName,
 } from "./util.js";
 
 const chatEl = $("#chat");
@@ -246,7 +246,7 @@ function imageCardHtml(m) {
   const im = m.image || {};
   const ratio = ratioOf(im.aspect);
   if (im.status === "loading") {
-    return `<figure class="media-card">${loadingBlock("Rasm chizilmoqda…", im.startedAt || Date.now(), ratio)}<figcaption class="cap">Tavsif inglizchaga o‘girilib, Flux modeliga yuboriladi. Odatda 5–15 soniya.</figcaption></figure>`;
+    return `<figure class="media-card">${loadingBlock("Rasm chizilmoqda…", im.startedAt || Date.now(), ratio)}<figcaption class="cap">Tavsif Zumrad 1.3 uchun tayyorlanmoqda. Odatda 5–15 soniya.</figcaption></figure>`;
   }
   if (im.status === "error") {
     return `<figure class="media-card"><div class="note err" role="alert"><p>${escapeHtml(im.error || "Rasm yaratilmadi.")}</p><button type="button" class="chip" data-act="regen">${icon("refresh", "sm")}Qayta urinish</button></div></figure>`;
@@ -386,6 +386,32 @@ export function initScroll() {
 
 /* ====================== Biriktirmalar ====================== */
 
+const ZIP_SKIP = /(^|\/)(node_modules|\.git|dist|build|__pycache__|\.next|\.venv|vendor)\//i;
+const ZIP_MAX_FILE = 30_000;
+const ZIP_MAX_TOTAL = 60_000;
+
+/** ZIP ichidagi matn/kod fayllarini o'qib, bitta matnli biriktirma qiladi. */
+async function readZipAttachment(f) {
+  if (!window.JSZip) throw new Error("jszip");
+  if (f.size > 25_000_000) throw new Error("big");
+  const zip = await window.JSZip.loadAsync(f);
+  const entries = Object.values(zip.files).filter((e) => !e.dir && !ZIP_SKIP.test(e.name));
+  const tree = entries.map((e) => e.name).join("\n");
+  let out = `ZIP arxiv: ${f.name} (${entries.length} fayl)\n\nFayllar ro‘yxati:\n${tree.slice(0, 8000)}\n`;
+  let included = 0;
+  let truncated = false;
+  for (const e of entries) {
+    if (!isTextFile({ name: e.name, type: "" })) continue;
+    if (out.length > ZIP_MAX_TOTAL) { truncated = true; break; }
+    let text = await e.async("string");
+    if (text.length > ZIP_MAX_FILE) { text = text.slice(0, ZIP_MAX_FILE) + "\n…(qisqartirilgan)"; truncated = true; }
+    out += `\n=== ${e.name} ===\n${text}\n`;
+    included++;
+  }
+  const total = entries.filter((e) => isTextFile({ name: e.name, type: "" })).length;
+  return { kind: "text", name: f.name, text: out, size: f.size, truncated, included, total };
+}
+
 export async function addFiles(fileList) {
   const files = [...fileList];
   for (const f of files) {
@@ -399,6 +425,10 @@ export async function addFiles(fileList) {
         const mediaId = uid();
         await store.putMedia(mediaId, blob);
         S.pending.push({ kind: "image", name: f.name || "rasm.jpg", mediaId, size: blob.size });
+      } else if (isZipFile(f)) {
+        const a = await readZipAttachment(f);
+        S.pending.push(a);
+        if (a.truncated) toast(`“${f.name}”: ${a.included}/${a.total} fayl o‘qildi (hajm cheklovi)`);
       } else if (isTextFile(f)) {
         if (f.size > 600_000) {
           toast(`“${f.name}” juda katta (600 KB dan oshmasin)`, "error");
@@ -410,7 +440,7 @@ export async function addFiles(fileList) {
         S.pending.push({ kind: "text", name: f.name, text, size: f.size, truncated });
         if (truncated) toast(`“${f.name}” ning dastlabki 30 000 belgisi olindi`);
       } else {
-        toast(`“${f.name}” formati hozircha qo‘llanmaydi. Matn, kod va rasm fayllarini biriktiring.`, "error", 4500);
+        toast(`“${f.name}” formati hozircha qo‘llanmaydi. Matn, kod, rasm va ZIP fayllarini biriktiring.`, "error", 4500);
       }
     } catch {
       toast(`“${f.name}” ni o‘qib bo‘lmadi`, "error");

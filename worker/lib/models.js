@@ -5,37 +5,39 @@ export const DEFAULT_MODELS = {
   // Tez, ko'p tilli, rasmni ko'ra oladi, kvotani juda kam sarflaydi.
   fast: {
     id: "@cf/google/gemma-4-26b-a4b-it",
-    label: "Gemma 4",
+    label: "Zumrad 1.0",
     tokenParam: "max_completion_tokens",
     vision: true,
   },
   // Murakkab fikrlash uchun kuchli (lekin kvotani ~7 baravar tez sarflaydi).
   smart: {
     id: "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-    label: "Llama 3.3 70B",
+    label: "Zumrad 1.0 Pro",
     tokenParam: "max_tokens",
     vision: false,
   },
   // Dasturlash uchun ixtisoslashgan model.
   code: {
     id: "@cf/qwen/qwen2.5-coder-32b-instruct",
-    label: "Qwen 2.5 Coder",
+    label: "Zumrad 1.0 Kod",
     tokenParam: "max_tokens",
     vision: false,
   },
   // Zaxira: yuqoridagilar ishlamasa.
   backup: {
     id: "@cf/meta/llama-3.1-8b-instruct-fp8",
-    label: "Llama 3.1 8B",
+    label: "Zumrad 1.0 Lite",
     tokenParam: "max_tokens",
     vision: false,
   },
 };
 
 export const IMAGE_MODELS = {
-  fast: { id: "@cf/black-forest-labs/flux-1-schnell", label: "FLUX.1 schnell" },
-  hq: { id: "@cf/leonardo/lucid-origin", label: "Lucid Origin" },
+  fast: { id: "@cf/black-forest-labs/flux-1-schnell", label: "Zumrad 1.3" },
+  hq: { id: "@cf/leonardo/lucid-origin", label: "Zumrad 1.3 HD" },
 };
+
+export const VIDEO_MODEL = { label: "Zumrad 1.5" };
 
 export function resolveModels(env = {}) {
   const m = structuredClone(DEFAULT_MODELS);

@@ -4,7 +4,7 @@
 
 import { HttpError, json, clampStr, clampInt, safeEqual } from "./lib/util.js";
 import { generate, friendlyError } from "./lib/ai.js";
-import { resolveModels, pickModelKey, fallbackChain, IMAGE_MODELS } from "./lib/models.js";
+import { resolveModels, pickModelKey, fallbackChain, IMAGE_MODELS, VIDEO_MODEL } from "./lib/models.js";
 import { buildSystemPrompt } from "./lib/prompts.js";
 import { searchWeb, wantsSearch, formatSourcesForPrompt } from "./lib/search.js";
 import { generateImage } from "./lib/image.js";
@@ -133,6 +133,7 @@ function health(env) {
     accessCode: Boolean(env.ACCESS_CODE),
     models: Object.fromEntries(["fast", "smart", "code"].map((k) => [k, { id: models[k].id, label: models[k].label }])),
     image: { fast: IMAGE_MODELS.fast.label, hq: IMAGE_MODELS.hq.label },
+    videoLabel: VIDEO_MODEL.label,
     search: env.TAVILY_API_KEY ? "tavily" : env.BRAVE_API_KEY ? "brave" : "duckduckgo",
     video: { montage: Boolean(env.AI), generative: replicateConfigured(env) },
   });

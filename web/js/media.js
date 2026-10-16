@@ -67,7 +67,7 @@ async function pool(items, size, worker) {
 }
 
 /**
- * Video: ssenariy -> kadrlar (Flux) -> brauzerda montaj. Qaytadan chaqirilsa, tayyor qismlarni qayta ishlatadi.
+ * Video: ssenariy -> kadrlar (Zumrad 1.3) -> brauzerda montaj. Qaytadan chaqirilsa, tayyor qismlarni qayta ishlatadi.
  */
 export async function runVideo({ msg, idea, seconds, aspect, signal, onUpdate }) {
   msg.kind = "video";

@@ -1,6 +1,6 @@
 # Zumrad AI
 
-O‘zbek tilidagi AI yordamchi: **suhbat, kod (jonli ko‘rinish bilan), rasm va video**. Cloudflare Workers AI ustida ishlaydi — alohida server ham, API kaliti ham kerak emas.
+O‘zbek tilidagi AI yordamchi: **suhbat, kod (jonli ko‘rinish bilan), rasm va video**. Zumrad 1.0 (suhbat), Zumrad 1.3 (rasm), Zumrad 1.5 (video) — ichki motor Cloudflare Workers AI dagi tayyor ochiq modellar; alohida server ham, API kaliti ham kerak emas. O'z og'irliklaringizni o'qitish uchun `finetune/` papkasiga qarang.
 
 ## Nimalar qila oladi
 

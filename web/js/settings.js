@@ -63,24 +63,24 @@ function render() {
   const h = S.health;
   const models = h?.models;
   const modelNote = models
-    ? `Tez: ${escapeHtml(models.fast.label)} · Aqlli: ${escapeHtml(models.smart.label)} · Kod: ${escapeHtml(models.code.label)}. “Avto” kod so‘ralganda kod modelini, qolganida tez modelni tanlaydi.`
+    ? `Tez: ${escapeHtml(models.fast.label)} · Aqlli: ${escapeHtml(models.smart.label)} · Kod: ${escapeHtml(models.code.label)}. “Avto” kod so‘ralganda kod rejimini, qolganida tez rejimni tanlaydi.`
     : "Server holati noma’lum.";
   const status = h
     ? `<ul class="status-list">
-        <li data-ok="${h.ai}"><b>AI (Workers AI)</b><span>${h.ai ? "ulangan" : "ulanmagan — DEPLOY.md ni ko‘ring"}</span></li>
-        <li data-ok="true"><b>Rasm</b><span>${escapeHtml(h.image.fast)} · ${escapeHtml(h.image.hq)}</span></li>
-        <li data-ok="${h.video.montage}"><b>Video (kino-montaj)</b><span>${h.video.montage ? "tayyor" : "AI kerak"}</span></li>
+        <li data-ok="${h.ai}"><b>Zumrad AI motori</b><span>${h.ai ? "ulangan" : "ulanmagan — DEPLOY.md ni ko‘ring"}</span></li>
+        <li data-ok="true"><b>Rasm (Zumrad 1.3)</b><span>${escapeHtml(h.image.fast)} · ${escapeHtml(h.image.hq)}</span></li>
+        <li data-ok="${h.video.montage}"><b>${escapeHtml(h.videoLabel || "Zumrad 1.5")} (video)</b><span>${h.video.montage ? "tayyor" : "AI kerak"}</span></li>
         <li data-ok="${h.video.generative}"><b>Generativ video</b><span>${h.video.generative ? "ulangan" : "ixtiyoriy, ulanmagan"}</span></li>
         <li data-ok="true"><b>Internet qidiruvi</b><span>${escapeHtml(h.search)}</span></li>
         <li data-ok="${!h.accessCode || Boolean(s.accessCode)}"><b>Kirish kodi</b><span>${h.accessCode ? "talab qilinadi" : "o‘rnatilmagan (ochiq)"}</span></li>
       </ul>`
-    : `<p class="note err">Serverga ulanib bo‘lmadi. Sayt Cloudflare Worker orqali ochilganini tekshiring.</p>`;
+    : `<p class="note err">Serverga ulanib bo‘lmadi. Sayt Worker orqali ochilganini tekshiring.</p>`;
 
   $("#settingsBody").innerHTML = `
     <section><h3>Ko‘rinish</h3>
       <div class="row"><label>Mavzu</label>${seg("theme", [["system", "Tizim"], ["light", "Yorug‘"], ["dark", "Qorong‘i"]], s.theme)}</div>
     </section>
-    <section><h3>Suhbat</h3>
+    <section><h3>Suhbat · Zumrad 1.0</h3>
       <div class="row"><label>Model</label>${seg("model", [["auto", "Avto"], ["fast", "Tez"], ["smart", "Aqlli"], ["code", "Kod"]], s.model)}</div>
       <p class="hint">${modelNote}</p>
       <div class="row"><label>Internet qidiruvi</label>${seg("web", [["auto", "Avto"], ["on", "Doim"], ["off", "O‘chiq"]], s.web)}</div>
@@ -90,9 +90,9 @@ function render() {
       <div class="row"><label>Sifat</label>${seg("imageQuality", [["fast", "Tez"], ["hq", "Sifatli"]], s.imageQuality)}</div>
       <div class="row"><label for="setAspect">Format (Sifatli)</label>
         <select id="setAspect">${["1:1", "16:9", "9:16", "4:3", "3:4"].map((a) => `<option ${a === s.imageAspect ? "selected" : ""}>${a}</option>`).join("")}</select></div>
-      <p class="hint">“Tez” — FLUX.1 schnell, kuniga yuzlab rasm. “Sifatli” — Lucid Origin, har rasm bepul kvotaning katta qismini (~1500 neyron) sarflaydi.</p>
+      <p class="hint">“Tez” — Zumrad 1.3, kuniga yuzlab rasm. “Sifatli” — Zumrad 1.3 HD, har rasm bepul kvotaning katta qismini sarflaydi.</p>
     </section>
-    <section><h3>Video</h3>
+    <section><h3>Video · Zumrad 1.5</h3>
       <div class="row"><label>Davomiyligi</label>${seg("videoSeconds", [[10, "10 s"], [20, "20 s"], [30, "30 s"]], s.videoSeconds)}</div>
       <div class="row"><label>Format</label>${seg("videoAspect", [["16:9", "16:9"], ["9:16", "9:16"], ["1:1", "1:1"]], s.videoAspect)}</div>
     </section>
