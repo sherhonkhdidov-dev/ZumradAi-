@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Faqat shu ikki qiymatni o'zgartiring. -->
+<resources>
+    <!-- Cloudflare'dagi Zumrad saytingiz manzili (oxirida / bo'lmasin). -->
+    <string name="app_url" translatable="false">https://zumrad-ai.CHANGE-ME.workers.dev</string>
+    <!-- Agar saytda ACCESS_CODE qo'ygan bo'lsangiz, shu yerga yozing. Aks holda bo'sh qoldiring. -->
+    <string name="access_code" translatable="false"></string>
+</resources>

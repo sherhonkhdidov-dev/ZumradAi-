@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Zumrad AI</string>
+    <string name="notif_title">Zumrad tinglayapti</string>
+    <string name="notif_text">«Zumrad» deb chaqiring</string>
+    <string name="notif_stop">To‘xtatish</string>
+</resources>

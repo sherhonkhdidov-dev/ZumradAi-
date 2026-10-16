@@ -1,0 +1,32 @@
+name: Android APK
+
+on:
+  push:
+    paths:
+      - "android/**"
+      - ".github/workflows/android.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: android-actions/setup-android@v3
+      - name: Build APK
+        working-directory: android
+        run: ./gradlew --no-daemon assembleDebug
+      - name: Publish APK as a release (download link)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp android/app/build/outputs/apk/debug/app-debug.apk ZumradAI.apk
+          gh release delete apk-latest --yes --cleanup-tag || true
+          gh release create apk-latest ZumradAI.apk --title "Zumrad AI (Android)" --notes "Telefonga yuklab o'rnating: ZumradAI.apk"

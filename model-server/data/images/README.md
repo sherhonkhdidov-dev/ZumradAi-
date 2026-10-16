@@ -1,0 +1,1 @@
+Place training images here (PNG/JPG/WebP/BMP). Use images you created or have explicit training rights to use. The starter trains an unconditional 64x64 pixel-space diffusion model, not a prompt-conditioned art generator.

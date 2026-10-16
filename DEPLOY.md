@@ -4,7 +4,7 @@ Bu versiya boshqa tayyor AI modellarini ishlatmaydi. Cloudflare Worker faqat siz
 
 ## 1. Avval o‘z matn modelini o‘qiting
 
-Python/PyTorch serveri va o‘qitilgan model vaznlari kerak. O‘qitilmagan model javob bera olmaydi.
+Model serveri `model-server/` papkasida (Render uchun `render.yaml` bor). O‘qitilmagan model javob bera olmaydi.
 
 ## 2. Model serverini joylashtirish
 

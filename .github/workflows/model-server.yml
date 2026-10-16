@@ -1,0 +1,31 @@
+name: Model server smoke test
+
+on:
+  push:
+    paths:
+      - "model-server/**"
+      - ".github/workflows/model-server.yml"
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install
+        working-directory: model-server
+        run: |
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install fastapi "uvicorn[standard]" numpy
+      - name: Start server and ask it something
+        working-directory: model-server
+        run: |
+          uvicorn server:app --port 8000 &
+          for i in $(seq 1 30); do curl -sf localhost:8000/health && break; sleep 2; done
+          echo
+          curl -s localhost:8000/api/chat -H 'content-type: application/json' \
+            -d '{"messages":[{"role":"user","content":"Salom"}],"max_new_tokens":80}'
+          echo
