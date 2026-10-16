@@ -9,23 +9,39 @@ function ownModelUrl(env) {
   return base;
 }
 
+function flatten(content) {
+  if (!Array.isArray(content)) return String(content ?? "");
+  return content.map((p) => (typeof p === "string" ? p : p?.text || "")).join(" ");
+}
+
 async function askOwnModel(env, { messages, maxTokens = 600, temperature = 0.6 }) {
   const base = ownModelUrl(env);
+  // OWN_MODEL_API=openai — o'zingiz joylagan llama.cpp/vLLM kabi OpenAI-mos server (Hugging Face Space va h.k.).
+  const openai = String(env.OWN_MODEL_API || "").toLowerCase() === "openai";
   const headers = { "content-type": "application/json" };
   if (env.OWN_MODEL_TOKEN) headers.authorization = `Bearer ${env.OWN_MODEL_TOKEN}`;
+  const url = openai ? `${base}/v1/chat/completions` : `${base}/api/chat`;
+  const body = openai
+    ? {
+        model: "zumrad",
+        messages: messages.map((m) => ({ role: m.role, content: flatten(m.content) })),
+        max_tokens: Math.min(maxTokens, 2000),
+        temperature,
+        stream: false,
+      }
+    : { messages, max_new_tokens: Math.min(maxTokens, 1000), temperature };
   let response;
   try {
-    response = await fetch(`${base}/api/chat`, {
-      method: "POST", headers,
-      body: JSON.stringify({ messages, max_new_tokens: Math.min(maxTokens, 1000), temperature }),
-    });
+    response = await fetch(url, { method: "POST", headers, body: JSON.stringify(body) });
   } catch {
     throw new HttpError(503, "O‘z Zumrad model serveriga ulanib bo‘lmadi. Server manzili va internet aloqasini tekshiring.", "own_model_unreachable");
   }
   const data = await response.json().catch(() => ({}));
   if (!response.ok) throw new HttpError(response.status === 404 ? 503 : 502,
-    data.detail || data.error || "O‘z model serveri javob bermadi.", "own_model_error");
-  const reply = typeof data.reply === "string" ? data.reply : "";
+    data.detail || data.error?.message || data.error || "O‘z model serveri javob bermadi.", "own_model_error");
+  const reply = openai
+    ? String(data.choices?.[0]?.message?.content || "")
+    : (typeof data.reply === "string" ? data.reply : "");
   if (!reply.trim()) throw new HttpError(502, "O‘z modelimiz bo‘sh javob qaytardi.", "own_model_empty");
   return { text: reply, model: data.model || "Zumrad Own Model", key: "own" };
 }

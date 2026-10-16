@@ -33,3 +33,7 @@ Deploydan so‘ng `/api/health` da `aiMode: "own-model-only"` ko‘rinishi kerak
 npm install
 npm test
 ```
+
+## Miya serveri (limitsiz, o‘zingiz joylagan)
+
+`llm-server/` — Hugging Face Space (Docker) uchun tayyor ochiq model serveri. Cloudflare'da `OWN_MODEL_API=openai` bilan ulanadi. Qadamlar: `llm-server/README.md`.

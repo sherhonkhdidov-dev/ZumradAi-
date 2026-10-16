@@ -55,6 +55,33 @@ test("chat: javob faqat OWN_MODEL_URL serveridan olinadi", async () => {
   }
 });
 
+test("chat: OWN_MODEL_API=openai rejimi /v1/chat/completions ga so‘rov yuboradi", async () => {
+  const originalFetch = globalThis.fetch;
+  let called = "", auth = "";
+  globalThis.fetch = async (url, init) => {
+    called = String(url);
+    auth = init.headers.authorization;
+    const body = JSON.parse(init.body);
+    assert.equal(body.stream, false);
+    assert.match(body.messages.at(-1).content, /Salom/);
+    return new Response(JSON.stringify({ model: "zumrad-gguf", choices: [{ message: { role: "assistant", content: "Salom! Men Zumradman." } }] }), {
+      status: 200, headers: { "content-type": "application/json" }
+    });
+  };
+  try {
+    const res = await post({ OWN_MODEL_URL: "https://llm.example/", OWN_MODEL_API: "openai", OWN_MODEL_TOKEN: "k" }, "/api/chat", {
+      stream: false, messages: [{ role: "user", content: "Salom" }]
+    });
+    const j = await res.json();
+    assert.equal(res.status, 200);
+    assert.equal(called, "https://llm.example/v1/chat/completions");
+    assert.equal(auth, "Bearer k");
+    assert.match(j.reply, /Zumradman/);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
 test("rasm: o‘z rasm modeli yo‘q bo‘lsa tashqi model ishlatmaydi", async () => {
   const res = await post({ AI: { run() { throw new Error("Tashqi model chaqirildi"); } } }, "/api/image", { prompt: "tog‘lar" });
   const j = await res.json();
