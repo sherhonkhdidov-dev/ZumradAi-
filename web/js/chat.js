@@ -118,7 +118,7 @@ const SUGGESTIONS = [
   { icon: "code", title: "Portfolio saytini yozish", hint: "Jonli ko‘rinish bilan", text: "Frontend dasturchi uchun portfolio sayt yoz: ismi Dilshod, 3 ta loyiha, bog‘lanish formasi. Telefonda chiroyli ko‘rinadigan, yorug‘ va qorong‘i mavzuli, bitta index.html bo‘lsin." },
   { icon: "code", title: "Telegram bot yaratish", hint: "Python, to‘liq loyiha", text: "Python va aiogram 3 bilan Telegram bot yozib ber: foydalanuvchi shahar nomini yuboradi, bot ob-havoni ko‘rsatadi. Fayllar tuzilmasi va ishga tushirish qadamlarini ham yoz." },
   { icon: "image", title: "Registon tongda", hint: "Rasm chizish", text: "Samarqand Registonining tong chog‘idagi rasmini chiz: iliq quyosh nuri, yengil tuman, oldinda kabutarlar." },
-  { icon: "film", title: "Osh haqida video", hint: "Kadrlar, harakat va musiqa bilan", text: "20 soniyalik video yarat: Samarqand oshining tayyorlanishi — qozon, olov, bug‘, dasturxon atrofida yig‘ilgan oila." },
+  { icon: "chat", title: "Dars rejasini tuzish", hint: "Aniq va tushunarli", text: "Maktab o‘quvchilari uchun Python dasturlashni o‘rgatuvchi 4 haftalik dars rejasi tuzib ber: har hafta mavzu, mashq va uy vazifasi bilan." },
 ];
 
 function welcomeEl() {
@@ -128,7 +128,7 @@ function welcomeEl() {
     <div class="welcome-pattern" aria-hidden="true"><div></div></div>
     <img class="welcome-star" src="icons/logo.svg" alt="" width="56" height="56">
     <h2>Nima yaratamiz?</h2>
-    <p>Savol bering, kod yozdiring, rasm chizdiring yoki qisqa video yasang. Fayl yoki rasm tashlasangiz, uni ham o‘qiydi.</p>
+    <p>Savol bering, kod yozdiring, yoki rasm chizdiring. Fayl yoki rasm tashlasangiz, uni ham o‘qiydi.</p>
     <ul class="starters">
       ${SUGGESTIONS.map((s, i) => `<li><button type="button" data-act="starter" data-i="${i}">${icon(s.icon)}<span class="st-title">${s.title}</span><span class="st-hint">${s.hint}</span></button></li>`).join("")}
     </ul>`;

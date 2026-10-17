@@ -41,14 +41,7 @@ function renderModeOptions() {
   const s = S.settings;
   if (S.mode === "image") {
     host.hidden = false;
-    host.innerHTML = `<span class="opt-label">Sifat</span>${miniSeg("imageQuality", [["fast", "Tez"], ["hq", "Sifatli"]], s.imageQuality)}
-      ${s.imageQuality === "hq" ? `<span class="opt-label">Format</span>${miniSeg("imageAspect", [["1:1", "1:1"], ["16:9", "16:9"], ["9:16", "9:16"], ["4:3", "4:3"]], s.imageAspect)}` : `<span class="opt-note">Kvadrat, ~10 soniya</span>`}`;
-  } else if (S.mode === "video") {
-    host.hidden = false;
-    const gen = S.health?.video?.generative;
-    host.innerHTML = `<span class="opt-label">Davomiyligi</span>${miniSeg("videoSeconds", [[10, "10 s"], [20, "20 s"], [30, "30 s"]], s.videoSeconds)}
-      <span class="opt-label">Format</span>${miniSeg("videoAspect", [["16:9", "16:9"], ["9:16", "9:16"], ["1:1", "1:1"]], s.videoAspect)}
-      ${gen ? `<span class="opt-label">Usul</span>${miniSeg("generative", [["no", "Kino-montaj"], ["yes", "Generativ"]], S.generative ? "yes" : "no")}` : ""}`;
+    host.innerHTML = `<span class="opt-note">Kvadrat rasm, ~10 soniya</span>`;
   } else {
     host.hidden = true;
     host.innerHTML = "";

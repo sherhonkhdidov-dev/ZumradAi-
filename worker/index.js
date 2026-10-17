@@ -1,6 +1,5 @@
 // Zumrad AI — Cloudflare Worker (API + statik sayt).
-// Endpointlar: /api/health, /api/chat (SSE), /api/image, /api/video/plan,
-//              /api/video/generate, /api/video/status, /api/search
+// Endpointlar: /api/health, /api/chat (SSE), /api/image, /api/search
 
 import { HttpError, json, clampStr, clampInt, safeEqual } from "./lib/util.js";
 import { generate, friendlyError, hasBrain, providerNames } from "./lib/ai.js";
@@ -8,7 +7,6 @@ import { pickModelKey } from "./lib/models.js";
 import { buildSystemPrompt } from "./lib/prompts.js";
 import { searchWeb, wantsSearch, formatSourcesForPrompt } from "./lib/search.js";
 import { generateImage } from "./lib/image.js";
-import { planVideo } from "./lib/video.js";
 
 const VERSION = "2.0.0";
 const MAX_HISTORY_MESSAGES = 24;
@@ -50,22 +48,8 @@ async function route(request, env, ctx, url) {
       prompt: b.prompt,
       quality: b.quality === "hq" ? "hq" : "fast",
       aspect: String(b.aspect || "1:1"),
-      enhance: b.enhance !== false,
     });
     return json(data);
-  }
-  if (pathname === "/api/video/plan" && method === "POST") {
-    rateLimit(request, "plan", 8);
-    const b = await readJson(request);
-    return json(await planVideo(env, { idea: b.idea, seconds: b.seconds, aspect: String(b.aspect || "16:9") }));
-  }
-  if (pathname === "/api/video/generate" && method === "POST") {
-    throw new HttpError(503,
-      "Tashqi video AI o‘chirildi. Zumrad’ning o‘z video modeli hali yaratilmagan; OWN_VIDEO_URL bilan o‘zingiz joylashtirgan modelni ulash kerak.",
-      "own_video_not_configured");
-  }
-  if (pathname === "/api/video/status" && method === "GET") {
-    throw new HttpError(503, "Zumrad’ning o‘z generativ video modeli hali ulanmagan.", "own_video_not_configured");
   }
   if (pathname === "/api/search" && method === "GET") {
     rateLimit(request, "search", 20);
@@ -133,11 +117,10 @@ function health(env) {
     providers: providerNames(env),
     externalAiModels: providerNames(env).some((n) => n !== "own"),
     ownModelConfigured: Boolean(env.OWN_MODEL_URL),
+    image: Boolean(env.OWN_IMAGE_URL) || Boolean(env.AI),
     ownImageModelConfigured: Boolean(env.OWN_IMAGE_URL),
-    ownVideoModelConfigured: Boolean(env.OWN_VIDEO_URL),
     accessCode: Boolean(env.ACCESS_CODE),
     search: env.TAVILY_API_KEY ? "tavily" : env.BRAVE_API_KEY ? "brave" : "duckduckgo",
-    video: { montage: false, generative: false, ownModelConfigured: Boolean(env.OWN_VIDEO_URL) },
   });
 }
 

@@ -86,16 +86,6 @@ function render() {
       <div class="row"><label>Internet qidiruvi</label>${seg("web", [["auto", "Avto"], ["on", "Doim"], ["off", "O‘chiq"]], s.web)}</div>
       <p class="hint">“Avto” — yangilik, narx, bugungi voqealar kabi savollarda qidiradi.</p>
     </section>
-    <section><h3>Rasm</h3>
-      <div class="row"><label>Sifat</label>${seg("imageQuality", [["fast", "Tez"], ["hq", "Sifatli"]], s.imageQuality)}</div>
-      <div class="row"><label for="setAspect">Format (Sifatli)</label>
-        <select id="setAspect">${["1:1", "16:9", "9:16", "4:3", "3:4"].map((a) => `<option ${a === s.imageAspect ? "selected" : ""}>${a}</option>`).join("")}</select></div>
-      <p class="hint">“Tez” — FLUX.1 schnell, kuniga yuzlab rasm. “Sifatli” — Lucid Origin, har rasm bepul kvotaning katta qismini (~1500 neyron) sarflaydi.</p>
-    </section>
-    <section><h3>Video</h3>
-      <div class="row"><label>Davomiyligi</label>${seg("videoSeconds", [[10, "10 s"], [20, "20 s"], [30, "30 s"]], s.videoSeconds)}</div>
-      <div class="row"><label>Format</label>${seg("videoAspect", [["16:9", "16:9"], ["9:16", "9:16"], ["1:1", "1:1"]], s.videoAspect)}</div>
-    </section>
     <section><h3>Kirish kodi</h3>
       <div class="row"><input id="setCode" type="password" autocomplete="off" placeholder="Agar sayt himoyalangan bo‘lsa" value="${escapeHtml(s.accessCode)}"></div>
       <p class="hint">Kod faqat shu brauzerda saqlanadi va har so‘rov bilan yuboriladi.</p>

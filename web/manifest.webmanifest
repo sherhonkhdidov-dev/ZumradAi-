@@ -1,7 +1,7 @@
 {
   "name": "Zumrad AI",
   "short_name": "Zumrad AI",
-  "description": "O‘zbek tilidagi sun’iy intellekt: suhbat, kod, rasm va video.",
+  "description": "O‘zbek tilidagi sun’iy intellekt: suhbat, kod va rasm.",
   "lang": "uz",
   "start_url": "/",
   "scope": "/",

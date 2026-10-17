@@ -2,7 +2,6 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import worker from "../worker/index.js";
 import { pickModelKey, looksLikeCode } from "../worker/lib/models.js";
-import { normalizePlan } from "../worker/lib/video.js";
 import { wantsSearch } from "../worker/lib/search.js";
 
 const BASE = "http://zumrad.test";
@@ -101,19 +100,34 @@ test("chat: OWN_MODEL_API=openai rejimi /v1/chat/completions ga so‘rov yuborad
   }
 });
 
-test("rasm: o‘z rasm modeli yo‘q bo‘lsa tashqi model ishlatmaydi", async () => {
-  const res = await post({ AI: { run() { throw new Error("Tashqi model chaqirildi"); } } }, "/api/image", { prompt: "tog‘lar" });
+test("rasm: Workers AI (FLUX) orqali rasm yaratiladi", async () => {
+  const jpeg = btoa(String.fromCharCode(0xff, 0xd8, 0xff, 0xe0, 1, 2, 3));
+  const calls = [];
+  const AI = {
+    run(id, args) {
+      calls.push(id);
+      if (id.includes("flux")) return { image: jpeg };
+      return { response: "A majestic snow-capped mountain at sunrise, golden light, ultra detailed" };
+    },
+  };
+  const res = await post({ AI }, "/api/image", { prompt: "tog‘lar" });
   const j = await res.json();
-  assert.equal(res.status, 503);
-  assert.equal(j.code, "own_image_not_configured");
+  assert.equal(res.status, 200);
+  assert.equal(j.mime, "image/jpeg");
+  assert.equal(j.image, jpeg);
+  assert.ok(calls.some((c) => c.includes("flux")));
 });
 
-test("video: generativ tashqi provayderga ulanmaydi", async () => {
-  const res = await post({ REPLICATE_API_TOKEN: "fake", REPLICATE_VIDEO_MODEL: "someone/model" }, "/api/video/generate", { prompt: "tog‘lar" });
+test("rasm: hech qanday rasm manbasi bo‘lmasa aniq 503", async () => {
+  const res = await post({}, "/api/image", { prompt: "tog‘lar" });
   const j = await res.json();
   assert.equal(res.status, 503);
-  assert.equal(j.code, "own_video_not_configured");
-  assert.match(j.error, /Tashqi video AI o‘chirildi/);
+  assert.equal(j.code, "no_image_provider");
+});
+
+test("video: endpointlar olib tashlangan", async () => {
+  const res = await post({}, "/api/video/plan", { idea: "x" });
+  assert.equal(res.status, 404);
 });
 
 test("xavfsizlik: boshqa origin POST so‘rovi rad etiladi", async () => {
@@ -130,16 +144,6 @@ test("intent: kod so‘rovi faqat ichki prompt rejimini belgilaydi, model tanlam
   assert.equal(pickModelKey("auto", { text: "HTML sayt yarat" }), "code");
   assert.equal(pickModelKey("auto", { text: "Salom" }), "own");
   assert.equal(looksLikeCode("Python function"), true);
-});
-
-test("normalizePlan: kadrlar tuzilmasini normallashtiradi", () => {
-  const result = normalizePlan({
-    title: "Sinov", style: "cinematic", music: "epic",
-    scenes: [{ caption: "1", image_prompt: "A mountain", motion: "zoom_in", seconds: 4 },
-             { caption: "2", image_prompt: "A river", motion: "pan_left", seconds: 4 }]
-  }, { scenes: 2, perScene: 4, aspect: "16:9", idea: "Tabiat" });
-  assert.equal(result.scenes.length, 2);
-  assert.match(result.scenes[0].image_prompt, /cinematic/);
 });
 
 test("internet qidiruv intenti saqlanadi", () => {
