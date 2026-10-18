@@ -1,5 +1,5 @@
 // Oddiy service worker: ilova qobig'ini keshlaydi (oflayn ochilish), /api/* ga tegmaydi.
-const CACHE = "zumrad-v2";
+const CACHE = "zumrad-v3";
 const SHELL = ["/", "/css/app.css", "/js/main.js", "/icons/logo.svg"];
 
 self.addEventListener("install", (e) => {

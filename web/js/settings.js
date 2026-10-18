@@ -61,17 +61,13 @@ export function openSettings({ focusCode = false } = {}) {
 function render() {
   const s = S.settings;
   const h = S.health;
-  const models = h?.models;
-  const modelNote = models
-    ? `Tez: ${escapeHtml(models.fast.label)} · Aqlli: ${escapeHtml(models.smart.label)} · Kod: ${escapeHtml(models.code.label)}. “Avto” kod so‘ralganda kod modelini, qolganida tez modelni tanlaydi.`
-    : "Server holati noma’lum.";
+  const providers = Array.isArray(h?.providers) ? h.providers : [];
+  const names = { own: "O‘z server", gemini: "Gemini", groq: "Groq", "workers-ai": "Cloudflare AI" };
   const status = h
     ? `<ul class="status-list">
-        <li data-ok="${h.ai}"><b>AI (Workers AI)</b><span>${h.ai ? "ulangan" : "ulanmagan — DEPLOY.md ni ko‘ring"}</span></li>
-        <li data-ok="true"><b>Rasm</b><span>${escapeHtml(h.image.fast)} · ${escapeHtml(h.image.hq)}</span></li>
-        <li data-ok="${h.video.montage}"><b>Video (kino-montaj)</b><span>${h.video.montage ? "tayyor" : "AI kerak"}</span></li>
-        <li data-ok="${h.video.generative}"><b>Generativ video</b><span>${h.video.generative ? "ulangan" : "ixtiyoriy, ulanmagan"}</span></li>
-        <li data-ok="true"><b>Internet qidiruvi</b><span>${escapeHtml(h.search)}</span></li>
+        <li data-ok="${Boolean(h.ai)}"><b>Miya</b><span>${providers.length ? escapeHtml(providers.map((p) => names[p] || p).join(" → ")) : "ulanmagan — Cloudflare’da GEMINI_API_KEY qo‘shing"}</span></li>
+        <li data-ok="${Boolean(h.image)}"><b>Rasm</b><span>${h.image ? "tayyor" : "ulanmagan"}</span></li>
+        <li data-ok="true"><b>Internet qidiruvi</b><span>${escapeHtml(h.search || "")}</span></li>
         <li data-ok="${!h.accessCode || Boolean(s.accessCode)}"><b>Kirish kodi</b><span>${h.accessCode ? "talab qilinadi" : "o‘rnatilmagan (ochiq)"}</span></li>
       </ul>`
     : `<p class="note err">Serverga ulanib bo‘lmadi. Sayt Cloudflare Worker orqali ochilganini tekshiring.</p>`;
@@ -81,8 +77,6 @@ function render() {
       <div class="row"><label>Mavzu</label>${seg("theme", [["system", "Tizim"], ["light", "Yorug‘"], ["dark", "Qorong‘i"]], s.theme)}</div>
     </section>
     <section><h3>Suhbat</h3>
-      <div class="row"><label>Model</label>${seg("model", [["auto", "Avto"], ["fast", "Tez"], ["smart", "Aqlli"], ["code", "Kod"]], s.model)}</div>
-      <p class="hint">${modelNote}</p>
       <div class="row"><label>Internet qidiruvi</label>${seg("web", [["auto", "Avto"], ["on", "Doim"], ["off", "O‘chiq"]], s.web)}</div>
       <p class="hint">“Avto” — yangilik, narx, bugungi voqealar kabi savollarda qidiradi.</p>
     </section>
@@ -92,7 +86,7 @@ function render() {
     </section>
     <section><h3>Server holati</h3>${status}</section>
     <section><h3>Ma’lumotlar</h3>
-      <p class="hint">Suhbatlar, rasmlar va videolar faqat shu qurilmaning brauzerida saqlanadi.</p>
+      <p class="hint">Suhbatlar va rasmlar faqat shu qurilmaning brauzerida saqlanadi.</p>
       <div class="row wrap"><button type="button" class="chip" data-act="export-all">${icon("download", "sm")}Suhbatlarni yuklab olish (JSON)</button><button type="button" class="chip danger" data-act="wipe">${icon("trash", "sm")}Hammasini o‘chirish</button></div>
     </section>`;
 }
@@ -116,7 +110,7 @@ async function onClick(e) {
     downloadText(JSON.stringify(chats, null, 2), "zumrad-suhbatlar.json", "application/json");
   }
   if (b.dataset.act === "wipe") {
-    if (!confirm("Barcha suhbatlar, rasmlar va videolar o‘chiriladi. Davom etasizmi?")) return;
+    if (!confirm("Barcha suhbatlar va rasmlar o‘chiriladi. Davom etasizmi?")) return;
     await store.clearAll();
     S.chats = [];
     S.cur = null;
